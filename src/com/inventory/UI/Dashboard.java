@@ -7,8 +7,7 @@ package com.inventory.UI;
 
 import com.inventory.DAO.UserDAO;
 import com.inventory.DTO.UserDTO;
-import com.inventory.UI.LoginPage;
-
+import com.inventory.Database.ConnectionFactory;
 
 import javax.swing.*;
 import java.awt.CardLayout;

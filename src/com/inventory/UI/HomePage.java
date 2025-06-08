@@ -6,6 +6,10 @@
 package com.inventory.UI;
 
 import com.inventory.DAO.UserDAO;
+import com.inventory.DTO.UserDTO;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *

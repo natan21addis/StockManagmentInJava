@@ -1,13 +1,26 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.inventory.Database;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Properties;
 
 /**
- * Class to retrieve connection for database and login verification.
+ *
+ * @author asjad
  */
+
+//Class to retrieve connection for database and login verfication.
 public class ConnectionFactory {
 
     static final String driver = "com.mysql.cj.jdbc.Driver";
@@ -16,17 +29,23 @@ public class ConnectionFactory {
     static String password;
 
     Properties prop;
+
     Connection conn = null;
     Statement statement = null;
     ResultSet resultSet = null;
 
-    public ConnectionFactory() {
+    public ConnectionFactory(){
         try {
+            //Username and Password saved as configurable properties to allow changes without recompilation.
             prop = new Properties();
             prop.loadFromXML(new FileInputStream("lib/DBCredentials.xml"));
-            username = prop.getProperty("username");
-            password = prop.getProperty("password");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        username = prop.getProperty("username");
+        password = prop.getProperty("password");
 
+        try {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, username, password);
             statement = conn.createStatement();
@@ -46,24 +65,19 @@ public class ConnectionFactory {
         return conn;
     }
 
-    /**
-     * Check login credentials.
-     * For ADMINISTRATOR: use username/password check.
-     * For EMPLOYEE: check if the user exists; OTP is verified separately in UI.
-     */
-    public boolean checkLogin(String username, String password, String userType) {
+    //Login verification method
+    public boolean checkLogin(String username, String password, String userType){
+        String query = "SELECT * FROM users WHERE username='"
+                + username
+                + "' AND password='"
+                + password
+                + "' AND usertype='"
+                + userType
+                + "' LIMIT 1";
+
         try {
-            if (userType.equalsIgnoreCase("ADMINISTRATOR")) {
-                // Traditional login
-                String query = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "' AND usertype='ADMINISTRATOR' LIMIT 1";
-                resultSet = statement.executeQuery(query);
-                if (resultSet.next()) return true;
-            } else if (userType.equalsIgnoreCase("EMPLOYEE")) {
-                // EMPLOYEE: only check existence, OTP will be verified separately
-                String query = "SELECT * FROM users WHERE username='" + username + "' AND usertype='EMPLOYEE' LIMIT 1";
-                resultSet = statement.executeQuery(query);
-                if (resultSet.next()) return true; // found valid employee
-            }
+            resultSet = statement.executeQuery(query);
+            if(resultSet.next()) return true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -6,6 +6,7 @@
 package com.inventory.UI;
 
 import com.inventory.DAO.UserDAO;
+import com.inventory.DTO.UserDTO;
 
 import javax.swing.*;
 import java.sql.*;
