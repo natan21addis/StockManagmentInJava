@@ -360,3 +360,8 @@ public class CustomerPage extends javax.swing.JPanel {
     private javax.swing.JTextField searchText;
     // End of variables declaration//GEN-END:variables
 }
+
+
+
+
+
